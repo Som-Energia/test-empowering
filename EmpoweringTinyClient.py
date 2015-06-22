@@ -69,7 +69,7 @@ class Empowering_REQ(object):
     headers = {'Content-type': 'application/json'}
 
     def __init__(self,url,data=None):
-        self.url = requests.compat.urljoin(self.url,url)
+        self.url = requests.compat.urljoin(self.url, url)
         self.data = data
 
 
@@ -91,6 +91,10 @@ class Empowering_DELETE(Empowering_REQ):
 
 class Empowering_PATCH(Empowering_REQ):
     command = 'PATCH'
+
+    def __init__(self, url, etag, data):
+        self.headers.update({'If-Match': etag})
+        return super(Empowering_PATCH, self).__init__(url, data)
 
 
 class Empowering(object):
@@ -118,7 +122,17 @@ class Empowering(object):
 
     def add_contract(self,data):
         url = 'contracts/'
-        req = Empowering_POST(url,data)
+        req = Empowering_POST(url, data)
+        return self.engine.req(req)
+
+    def update_contract(self, contract_id, etag, data):
+        url = 'contracts/'
+        
+        if not contract_id:
+            raise Exception
+
+        url = requests.compat.urljoin(url, contract_id)
+        req = Empowering_PATCH(url, etag, data)
         return self.engine.req(req)
 
     def delete_contract(self, contract_id, etag):

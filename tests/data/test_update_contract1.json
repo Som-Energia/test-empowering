@@ -1,0 +1,53 @@
+{
+    "contractId": "AA00AA00", 
+    "ownerId": "931a475b-816d-5b6e-bad5-0823d3868e00", 
+    "payerId": "931a475b-816d-5b6e-bad5-0823d3868e00", 
+    "signerId": "931a475b-816d-5b6e-bad5-0823d3868e00", 
+    "power": 11000, 
+    "dateStart": "2014-01-01T22:00:00Z", 
+    "tariffId": "2.1A", 
+    "meteringPointId": "cc105572-45a4-567c-a196-08a3de65fb00", 
+    "activityCode": "9820", 
+    "companyId": 3108188543, 
+    "customer": {
+        "customerId": "931a475b-816d-5b6e-bad5-0823d3868e00",
+        "address": {
+            "city": "Barcelona", 
+            "cityCode": "08019", 
+            "countryCode": "ES"
+        }, 
+        "buildingData": {
+            "buildingWindowsFrame": "PVC", 
+            "buildingWindowsType": "double_panel", 
+            "buildingType": "Apartment", 
+            "dwellingPositionInBuilding": "first_floor", 
+            "buildingHeatingSourceDhw": "gasoil", 
+            "buildingSolarSystem": "not_installed", 
+            "dwellingOrientation": "SE", 
+            "dwellingArea": 196, 
+            "buildingHeatingSource": "district_heating", 
+            "buildingConstructionYear": 2014
+        },
+        "profile": {
+            "workingAgePersonsNumber": 2, 
+            "minorsPersonsNumber": 0, 
+            "malePersonsNumber": 2, 
+            "femalePersonsNumber": 1, 
+            "retiredAgePersonsNumber": 1, 
+            "totalPersonsNumber": 3,
+            "educationLevel": {
+                "edu_uni": 1, 
+                "edu_prim": 0, 
+                "edu_noStudies": 1, 
+                "edu_sec": 1
+            }	    
+        }
+    },     
+    "devices": [
+        {
+	    "deviceId": "c1810810-0381-012d-25a8-0017f2cd3574",
+            "dateStart": "2013-10-11T16:37:05Z", 
+            "dateEnd": null
+        }
+    ] 
+}
