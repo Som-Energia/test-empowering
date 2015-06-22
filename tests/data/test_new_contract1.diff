@@ -1,0 +1,37 @@
+--- a
++++ b
+{
+ 'activityCode': '9820',
+ 'companyId': 3108188543,
+ 'contractId': 'AA00AA00',
+ 'customer': {
+  'address': {
+  -'buildingId': None,
+   'city': 'Barcelona',
+   'cityCode': '08019',
+  -'country': None,
+   'countryCode': 'ES',
+  -'parcelNumber': None,
+  -'postalCode': None,
+  -'province': None,
+  -'provinceCode': None,
+  -'street': None,
+  @@  @@
+  },
+  'buildingData': {'buildingWindowsFrame': 'PVC', 'buildingHeatingSource': 'district_heating', 'buildingType': 'Apartment', 'dwellingPositionInBuilding': 'first_floor', 'buildingHeatingSourceDhw': 'gasoil', 'buildingSolarSystem': 'not_installed', 'dwellingOrientation': 'SE', 'dwellingArea': 196, 'buildingWindowsType': 'double_panel', 'buildingConstructionYear': 2014},
+  'customerId': '931a475b-816d-5b6e-bad5-0823d3868e00',
+  'customisedServiceParameters': {},
+  'profile': {'workingAgePersonsNumber': 2, 'educationLevel': {'edu_uni': 1, 'edu_prim': 0, 'edu_noStudies': 1, 'edu_sec': 1}, 'malePersonsNumber': 2, 'retiredAgePersonsNumber': 1, 'totalPersonsNumber': 3, 'minorsPersonsNumber': 0, 'femalePersonsNumber': 1},
+ @@  @@
+ },
+-'dateEnd': None,
+ 'devices': [{'dateStart': '2013-10-11T16:37:05Z', 'dateEnd': None, 'deviceId': 'c1810810-0381-012d-25a8-0017f2cd3574'}],
+ 'meteringPointId': 'cc105572-45a4-567c-a196-08a3de65fb00',
+ 'ownerId': '931a475b-816d-5b6e-bad5-0823d3868e00',
+ 'payerId': '931a475b-816d-5b6e-bad5-0823d3868e00',
+ 'power': 5750,
+ 'signerId': '931a475b-816d-5b6e-bad5-0823d3868e00',
+ 'tariffId': '2.0A',
+-'version': None,
+@@  @@
+}
