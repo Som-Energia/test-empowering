@@ -13,6 +13,7 @@ class EmpoweringEngine(object):
         'DELETE': requests.delete,
         'PATCH': requests.patch
     }
+
     def __init__(self, config, debug=False):
         self.url = config['url']
         self.key = config['key']
@@ -20,7 +21,7 @@ class EmpoweringEngine(object):
         self.company_id = config['company_id']
         self.debug = debug
 
-    def req_to_service(self,req):
+    def req_to_service(self, req):
         url = requests.compat.urljoin(self.url, req.url)
         data = req.data
         req.headers.update({'X-CompanyId': self.company_id})
@@ -68,7 +69,7 @@ class Empowering_REQ(object):
     data = None
     headers = {'Content-type': 'application/json'}
 
-    def __init__(self,url,data=None):
+    def __init__(self, url, data=None):
         self.url = requests.compat.urljoin(self.url, url)
         self.data = data
 
@@ -92,9 +93,9 @@ class Empowering_DELETE(Empowering_REQ):
 class Empowering_PATCH(Empowering_REQ):
     command = 'PATCH'
 
-    def __init__(self, url, etag, data):
+    def __init__(self, url, etag):
         self.headers.update({'If-Match': etag})
-        return super(Empowering_PATCH, self).__init__(url, data)
+        return super(Empowering_PATCH, self).__init__(url)
 
 
 class Empowering(object):
@@ -111,16 +112,19 @@ class Empowering(object):
     def debug(self, x):
         self.engine.debug = x
 
-    def get_contract(self, contract_id=None):
+    def get_contract(self, contract_id=None, max_results=100):
         url = 'contracts/'
 
         if contract_id:
             url = requests.compat.urljoin(url, contract_id)
+        else:
+            search_pattern = '?max_results={max_results}'.format(**locals())
+            url = requests.compat.urljoin(url, search_pattern)
 
         req = Empowering_GET(url)
         return self.engine.req(req)
 
-    def add_contract(self,data):
+    def add_contract(self, data):
         url = 'contracts/'
         req = Empowering_POST(url, data)
         return self.engine.req(req)
@@ -132,7 +136,7 @@ class Empowering(object):
             raise Exception
 
         url = requests.compat.urljoin(url, contract_id)
-        req = Empowering_PATCH(url, etag, data)
+        req = Empowering_PATCH(url, etag)
         return self.engine.req(req)
 
     def delete_contract(self, contract_id, etag):
