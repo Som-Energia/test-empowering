@@ -1,0 +1,35 @@
+--- a
++++ b
+{
+ 'activityCode': '9820',
+ 'contractId': '01712',
+ 'customer': {
+  'address': {
+  +'buildingId': None,
+   'city': 'Girona',
+   'cityCode': '17079',
+  +'country': None,
+  +'parcelNumber': None,
+  +'postalCode': None,
+  +'province': None,
+  +'provinceCode': None,
+  +'street': None,
+  @@  @@
+  },
+ +'buildingData': {'buildingHeatingSourceDhw': None, 'buildingHeatingSource': None, 'buildingWindowsType': None, 'buildingSolarSystem': None, 'buildingWindowsFrame': None, 'dwellingOrientation': None, 'buildingType': None, 'dwellingArea': None, 'buildingConstructionYear': None, 'dwellingPositionInBuilding': None},
+  'customerId': '67b46d2c-3040-5942-ad15-22c8adeac56b',
+ +'customisedGroupingCriteria': {},
+ +'customisedServiceParameters': {},
+ +'profile': {'workingAgePersonsNumber': None, 'educationLevel': {'edu_uni': None, 'edu_prim': None, 'edu_noStudies': None, 'edu_sec': None}, 'malePersonsNumber': None, 'retiredAgePersonsNumber': None, 'totalPersonsNumber': None, 'minorsPersonsNumber': None, 'femalePersonsNumber': None},
+ },
+ 'dateEnd': '2016-05-08T22:00:00Z',
+ 'dateStart': '2015-05-09T22:00:00Z',
+ 'devices': [{'dateStart': '2012-06-26T22:00:00Z', 'dateEnd': None, 'deviceId': '23301b87-f858-59d2-8f35-10eaec048335'}],
+ 'meteringPointId': '236f322c-eec9-5810-9bed-c8070f6d4aca',
+ 'ownerId': '67b46d2c-3040-5942-ad15-22c8adeac56b',
+ 'payerId': '67b46d2c-3040-5942-ad15-22c8adeac56b',
+ 'power': 4400,
+ 'tariffId': '2.0A',
+ 'version': 2,
+@@  @@
+}

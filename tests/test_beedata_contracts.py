@@ -26,8 +26,8 @@ class EmpoweringTestContract(unittest.TestCase):
     def setUpClass(self):
         config = {
             'url': os.getenv('EMPOWERING_URL', None),
-            'key': os.getenv('EMPOWERING_KEY', None),
-            'cert': os.getenv('EMPOWERING_CERT', None),
+            'key': os.getenv('EMPOWERING_KEY_FILE', None),
+            'cert': os.getenv('EMPOWERING_CERT_FILE', None),
             'company_id': os.getenv('EMPOWERING_COMPANY_ID', None)
             }
         self.client = EmpoweringTinyClient.Empowering(config,debug=False)
