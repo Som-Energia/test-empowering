@@ -2,6 +2,7 @@ import requests
 import collections
 import json
 import os
+from urlparse import urlparse
 
 from empowering.utils import remove_none, make_uuid, make_utc_timestamp
 
@@ -16,15 +17,40 @@ class EmpoweringEngine(object):
 
     def __init__(self, config, debug=False):
         self.url = config['url']
+        self.username = config['username']
+        self.password = config['password']
         self.key = config['key']
         self.cert = config['cert']
         self.company_id = config['company_id']
         self.debug = debug
+        self.auth = None
+
+    def login(self, headers):
+        data = json.dumps({
+            "username": self.username, "password": self.password
+        })
+        url_parts = urlparse(self.url)
+        login_url = url_parts.scheme + '://' + url_parts.netloc + '/authn/login'
+
+        headers.update({'Content-type': 'application/json'})
+        result = self.methods['POST'](login_url,
+                                      data=data,
+                                      headers=headers,
+                                      cert=(self.cert, self.key),
+                                      verify=False)
+        return result.json()['token']
+
 
     def req_to_service(self, req):
+        headers = {'X-CompanyId': self.company_id}
+
         url = requests.compat.urljoin(self.url, req.url)
         data = req.data
-        req.headers.update({'X-CompanyId': self.company_id})
+        req.headers.update(headers)
+
+        if not self.auth:
+            self.auth = self.login(headers)
+        req.headers.update({'Cookie': "iPlanetDirectoryPro=%s" % self.auth})
 
         result = self.methods[req.command](url,
                                            data=data,
@@ -93,9 +119,9 @@ class Empowering_DELETE(Empowering_REQ):
 class Empowering_PATCH(Empowering_REQ):
     command = 'PATCH'
 
-    def __init__(self, url, etag):
+    def __init__(self, url, etag, data):
         self.headers.update({'If-Match': etag})
-        return super(Empowering_PATCH, self).__init__(url)
+        return super(Empowering_PATCH, self).__init__(url, data)
 
 
 class Empowering(object):
@@ -112,13 +138,13 @@ class Empowering(object):
     def debug(self, x):
         self.engine.debug = x
 
-    def get_contract(self, contract_id=None, max_results=100):
+    def get_contract(self, contract_id=None, page=1, max_results=200):
         url = 'contracts/'
 
         if contract_id:
             url = requests.compat.urljoin(url, contract_id)
         else:
-            search_pattern = '?max_results={max_results}'.format(**locals())
+            search_pattern = '?page={page}&max_results={max_results}'.format(**locals())
             url = requests.compat.urljoin(url, search_pattern)
 
         req = Empowering_GET(url)
@@ -136,7 +162,7 @@ class Empowering(object):
             raise Exception
 
         url = requests.compat.urljoin(url, contract_id)
-        req = Empowering_PATCH(url, etag)
+        req = Empowering_PATCH(url, etag, data)
         return self.engine.req(req)
 
     def delete_contract(self, contract_id, etag):
