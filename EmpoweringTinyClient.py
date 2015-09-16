@@ -53,7 +53,7 @@ class EmpoweringEngine(object):
         req.headers.update({'Cookie': "iPlanetDirectoryPro=%s" % self.auth})
 
         result = self.methods[req.command](url,
-                                           data=data,
+                                           data=json.dumps(data),
                                            headers=req.headers,
                                            cert=(self.cert, self.key),
                                            verify=False)
@@ -192,6 +192,31 @@ class Empowering(object):
         req = Empowering_GET(url)
         return self.engine.req(req)
 
+    def get_measurements_by_contract(self, contract_id):
+        url = 'contracts/'
+
+        if not contract_id:
+            raise Exception
+
+        contract = self.get_contract(contract_id)
+        measurements = []
+        for device in contract['devices']:
+            measurements += self.get_measurements_by_device(device['deviceId'])
+        return measurements
+
+    def delete_measurements(self, contract_id):
+        url = 'delete_measures'
+
+        if not contract_id:
+            raise Exception
+
+        data = {"contractId": contract_id,
+                "companyId": int(self.engine.company_id),
+                "type": "electricityConsumption"
+        }
+        req = Empowering_POST(url, data)
+        return self.engine.req(req)
+
 
 class EmpoweringDataObject(object):
     def update(self,new_values):
@@ -232,6 +257,7 @@ class EmpoweringContract(EmpoweringDataObject):
             'power': None,
             'version': None,
             'activityCode': None,
+            'climaticZone': None,
             'customer': {
                 'customerId': None,
                 'address': {
