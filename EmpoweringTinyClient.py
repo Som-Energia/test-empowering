@@ -192,6 +192,17 @@ class Empowering(object):
         req = Empowering_GET(url)
         return self.engine.req(req)
 
+    def get_dh_measurements_by_device(self, device_id=None):
+        url = 'residential_timeofuse_amon_measures_measurements/'
+
+        if not device_id:
+            raise Exception
+
+        search_pattern = '?where="deviceId"=="{device_id}"'.format(**locals())
+        url = requests.compat.urljoin(url, search_pattern)
+        req = Empowering_GET(url)
+        return self.engine.req(req)
+
     def get_measurements_by_contract(self, contract_id):
         url = 'contracts/'
 
@@ -202,6 +213,18 @@ class Empowering(object):
         measurements = []
         for device in contract['devices']:
             measurements += self.get_measurements_by_device(device['deviceId'])
+        return measurements
+
+    def get_dh_measurements_by_contract(self, contract_id):
+        url = 'contracts/'
+
+        if not contract_id:
+            raise Exception
+
+        contract = self.get_contract(contract_id)
+        measurements = []
+        for device in contract['devices']:
+            measurements += self.get_dh_measurements_by_device(device['deviceId'])
         return measurements
 
     def delete_measurements(self, contract_id):
