@@ -31,7 +31,6 @@ class EmpoweringEngine(object):
         })
         url_parts = urlparse(self.url)
         login_url = url_parts.scheme + '://' + url_parts.netloc + '/authn/login'
-
         headers.update({'Content-type': 'application/json'})
         result = self.methods['POST'](login_url,
                                       data=data,
@@ -39,7 +38,6 @@ class EmpoweringEngine(object):
                                       cert=(self.cert, self.key),
                                       verify=False)
         return result.json()['token']
-
 
     def req_to_service(self, req):
         headers = {'X-CompanyId': self.company_id}
@@ -51,6 +49,7 @@ class EmpoweringEngine(object):
         if not self.auth:
             self.auth = self.login(headers)
         req.headers.update({'Cookie': "iPlanetDirectoryPro=%s" % self.auth})
+
 
         result = self.methods[req.command](url,
                                            data=json.dumps(data),
@@ -122,6 +121,25 @@ class Empowering_PATCH(Empowering_REQ):
     def __init__(self, url, etag, data):
         self.headers.update({'If-Match': etag})
         return super(Empowering_PATCH, self).__init__(url, data)
+
+
+class EmpoweringOTResults(object):
+    SUPPORTED_OT = ['OT101', 'OT102', 'OT103', 'OT105', 'OT106', 'OT201', 'OT204', 'OT205', 'OT301', 'OT302',
+                    'OT303', 'OT304', 'OT305', 'OT401', 'OT501', 'OT501', 'OT503', 'OT504', 'OT603', 'OT603g',
+                    'OT701', 'OT703', 'OT900', 'OT910', 'OT920'
+                    ]
+    name = None
+    path = None
+
+    @classmethod
+    def ot_is_supported(cls, ot):
+        return ot in cls.SUPPORTED_OT
+
+    @classmethod
+    def path(cls, ot):
+        if ot not in cls.SUPPORTED_OT:
+            raise NotImplementedError()
+        return ot + 'Results/'
 
 
 class Empowering(object):
@@ -239,6 +257,24 @@ class Empowering(object):
         }
         req = Empowering_POST(url, data)
         return self.engine.req(req)
+
+    def get_results_by_filter(self, url, search_pattern):
+        url = requests.compat.urljoin(url, search_pattern)
+        req = Empowering_GET(url)
+        return self.engine.req(req)
+
+    def get_results_by_contract(self, ot, contract_id, start_date=None, end_date=None):
+        if not EmpoweringOTResults.ot_is_supported(ot):
+            raise NotImplementedError
+
+        url = EmpoweringOTResults.path(ot)
+
+        search_pattern = '?where="contractId"=="{contract_id}"'.format(**locals())
+        if start_date:
+            search_pattern += '&"dateStart">"{start_date}"'.format(**locals())
+        if end_date:
+            search_pattern += '&"endStart">"{end_date}"'.format(**locals())
+        return self.get_results_by_filter(url, search_pattern)
 
 
 class EmpoweringDataObject(object):
