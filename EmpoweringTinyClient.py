@@ -276,6 +276,15 @@ class Empowering(object):
             search_pattern += '&"endStart">"{end_date}"'.format(**locals())
         return self.get_results_by_filter(url, search_pattern)
 
+    def get_all_results(self, ot, page=1, max_results=200):
+        if not EmpoweringOTResults.ot_is_supported(ot):
+            raise NotImplementedError
+
+        search_pattern = '?page={page}&max_results={max_results}'.format(**locals())
+        url = EmpoweringOTResults.path(ot)
+        req = Empowering_GET(url)
+        return self.get_results_by_filter(url, search_pattern)
+
 
 class EmpoweringDataObject(object):
     def update(self,new_values):
