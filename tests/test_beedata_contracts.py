@@ -7,7 +7,7 @@ import ast
 from datadiff import diff
 from utils import byteify, remove_from_dictionary
 
-import EmpoweringTinyClient
+import uempowering 
 
 
 class EmpoweringTestContract(unittest.TestCase):
@@ -30,7 +30,7 @@ class EmpoweringTestContract(unittest.TestCase):
             'cert': os.getenv('EMPOWERING_CERT_FILE', None),
             'company_id': os.getenv('EMPOWERING_COMPANY_ID', None)
             }
-        self.client = EmpoweringTinyClient.Empowering(config,debug=False)
+        self.client = uempowering.Empowering(config,debug=False)
 
     def _test_OK(self, result):
         self.assertEqual(result['_status'], 'OK')
@@ -38,14 +38,14 @@ class EmpoweringTestContract(unittest.TestCase):
             self.to_delete.append((result['contractId'], result['_etag']))
 
     def _test_new_OK(self, filename, field):
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', filename))
         result = self.client.add_contract(new_contract.dump())
         self.assertEqual(result[field], new_contract.root[field])
         self._test_OK(result)
 
     def _test_new_missing_OK(self, filename, child, field):
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', filename))
         new_contract.root.get(child,new_contract.root).pop(field)
 
@@ -53,12 +53,12 @@ class EmpoweringTestContract(unittest.TestCase):
         self._test_OK(result)
 
     def _test_update_OK(self, contract_filename, update_filename):
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         self.client.add_contract(new_contract.dump())
         contract = self.client.get_contract(new_contract.root['contractId'])
 
-        update_contract = EmpoweringTinyClient.EmpoweringContract()
+        update_contract = uempowering.EmpoweringContract()
         update_contract.load_from_file(os.path.join('data', update_filename))
         self.client.debug = True
         result = self.client.update_contract(contract['contractId'], contract['_etag'], update_contract.dump())
@@ -82,7 +82,7 @@ class EmpoweringTestContract(unittest.TestCase):
             self.fail('Request should fail')
 
     def _test_new_missing_ERROR(self, filename, child, field):
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data',filename))
         new_contract.root.get(child,new_contract.root).pop(field)
         self._test_ERROR(new_contract, field, "required field")
@@ -159,7 +159,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Post new contract with wrong data: start_date > today()
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data',contract_filename))
         new_contract.root['dateStart'] = (datetime.datetime.now() +
                                           datetime.timedelta(days=15)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -169,7 +169,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Post new contract with wrong data: end_data > start_date
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         new_contract.root['dateEnd'] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         new_contract.root['dateStart'] = (datetime.datetime.now() + \
@@ -180,7 +180,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Post new contract with wrong data: fake citycode
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         new_contract.root['customer']['address']['cityCode'] = '9999999999'
         self._test_ERROR(new_contract, 'cityCode', None) # TBD: Error message
@@ -189,7 +189,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Post new contract with wrong data: fake countrycode
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         new_contract.root['customer']['address']['countryCode'] = '9999999999'
         self._test_ERROR(new_contract, 'countryCode', None) # TBD: Error message
@@ -198,7 +198,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Post new contract with wrong data: fake postal code
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         new_contract.root['customer']['address']['postalCode'] = '9999999999'
         self._test_ERROR(new_contract, 'postalCode', None) # TBD: Error message
@@ -207,7 +207,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Post new contract with wrong data: fake provincecode
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         new_contract.root['customer']['address']['provinceCode'] = '9999999999'
         self._test_ERROR(new_contract, 'provinceCode', None) # TBD: Error message
@@ -217,7 +217,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """
         contract_filename = 'test_new_contract1.json'
         contract_filename_diff = 'test_new_contract1.diff'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         self.client.add_contract(new_contract.dump())
         contract  = self.client.get_contract(new_contract.root['contractId'])
@@ -345,7 +345,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Delete contract
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         self.client.add_contract(new_contract.dump())
         contract = self.client.get_contract(new_contract.root['contractId'])
@@ -361,7 +361,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Delete wrong _etag
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         self.client.add_contract(new_contract.dump())
         contract = self.client.get_contract(new_contract.root['contractId'])
@@ -381,7 +381,7 @@ class EmpoweringTestContract(unittest.TestCase):
         """ Delete wrong contractId
         """
         contract_filename = 'test_new_contract1.json'
-        new_contract = EmpoweringTinyClient.EmpoweringContract()
+        new_contract = uempowering.EmpoweringContract()
         new_contract.load_from_file(os.path.join('data', contract_filename))
         self.client.add_contract(new_contract.dump())
         contract = self.client.get_contract(new_contract.root['contractId'])

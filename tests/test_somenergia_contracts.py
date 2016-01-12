@@ -13,7 +13,7 @@ from amoniak.utils import (
     sorted_by_key, Popper, setup_queue
 )
 
-import EmpoweringTinyClient
+import uempowering
 
 
 class EmpoweringTestContract(unittest.TestCase):
@@ -39,7 +39,7 @@ class EmpoweringTestContract(unittest.TestCase):
             'cert': os.getenv('EMPOWERING_CERT_FILE', None),
             'company_id': os.getenv('EMPOWERING_COMPANY_ID', None)
             }
-        self.emp_client = EmpoweringTinyClient.Empowering(config, debug=False)
+        self.emp_client = uempowering.Empowering(config, debug=False)
         self.pg_client = setup_pg()
 
     def _test_OK(self, delete):
@@ -82,7 +82,7 @@ class EmpoweringTestContract(unittest.TestCase):
                                              '{contractId}.json'.format(**{'contractId': new_contract['contractId']}))
             contract_filename_diff = os.path.join('contracts',
                                                   '{contractId}.diff'.format(**{'contractId': new_contract['contractId']}))
-            contract = EmpoweringTinyClient.EmpoweringContract()
+            contract = uempowering.EmpoweringContract()
             contract.load_from_file(contract_filename)
             remove_from_dictionary(new_contract, ['_id', '_etag', '_created', '_updated', '_version', '_links'])
 
